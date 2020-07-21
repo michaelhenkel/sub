@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+import "policy.proto";
+
+package server;
+option go_package = "github.com/michaelhenkel/sub/server/proto";
+
+
+
+service Server {
+    rpc Create(ServerRequest) returns (ServerResult);
+}
+
+message ServerRequest{
+    oneof serverResource{
+        ServerResourceOne resourceOne = 1;
+        ServerResourceTwo resourceTwo = 2;
+    }
+
+}
+
+message ServerResult{
+
+}
+
+message ServerResourceOne{
+    string name = 1;
+    string kind = 2;
+    repeated string dtype = 3 [(policy.dgraph) = "ServerResourceOne"];
+    ServerResourceTwo srTwo = 4;
+}
+
+message ServerResourceTwo{
+    string name = 1;
+    string kind = 2;
+    repeated string dtype = 3 [(policy.dgraph) = "ServerResourceTwo"];
+    ResourceTwoSpec spec = 4;
+}
+
+message ResourceTwoSpec{
+    string specName = 1;
+    string specValue = 2;
+    repeated string dtype = 3 [(policy.dgraph) = "ResourceTwoSpec"];
+}

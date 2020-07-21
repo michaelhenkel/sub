@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+import "google/protobuf/descriptor.proto";
+
+package api;
+option go_package = "github.com/michaelhenkel/sub/api/proto";
+
+
+service Api {
+    rpc Create(Request) returns (Result);
+    rpc RegisterType(Message) returns (Result);
+}
+
+message Request{
+    string kind = 1;
+    string apiGroup = 2;
+    bytes msg = 3;
+}
+
+message Result{
+    
+}
+
+message Message{
+    google.protobuf.FileDescriptorProto fd = 1;
+}
