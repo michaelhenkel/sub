@@ -4,10 +4,10 @@ import (
 	"context"
 	"log"
 
+	"github.com/gogo/protobuf/proto"
 	apiPB "github.com/michaelhenkel/sub/api/proto"
 	serverPB "github.com/michaelhenkel/sub/server/proto"
 	"google.golang.org/grpc"
-	"google.golang.org/protobuf/proto"
 )
 
 func main() {
@@ -22,8 +22,10 @@ func main() {
 			Kind: "ServerResourceTwo",
 			Name: "srName2",
 			Spec: &serverPB.ResourceTwoSpec{
-				SpecName:  "r2specName1",
-				SpecValue: "r2specValue1",
+				SpecName:   "r2specName1",
+				SpecValue:  "r2specValue1",
+				StartRange: 9,
+				EndRange:   15,
 			},
 		},
 	}

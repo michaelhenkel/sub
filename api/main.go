@@ -26,7 +26,7 @@ type api struct {
 
 var GlobalTypes *protoregistry.Types = new(protoregistry.Types)
 
-//go:generate protoc -I../policy/proto --proto_path=proto --go_out=plugins=grpc:proto --go_opt=paths=source_relative proto/api.proto
+//go:generate protoc -I../policy/proto --proto_path=proto --gogo_out=plugins=grpc:proto --gogo_opt=paths=source_relative proto/api.proto
 
 func newAPI() *api {
 	s := &api{}
@@ -82,7 +82,13 @@ func rangeOverDynamicMsg(msg *dynamicpb.Message) {
 	msg.Set(dtypeFD, protoreflect.ValueOfList(dtypeList))
 	parentName := resName
 	msg.Range(func(descriptor pref.FieldDescriptor, value pref.Value) bool {
-		return processMsg(descriptor.Message(), descriptor, value, resName, parentName)
+		ok := processMsg(descriptor.Message(), descriptor, value, resName, parentName)
+		if !ok {
+			fmt.Println("violation")
+		} else {
+			fmt.Println("no violation")
+		}
+		return ok
 	})
 }
 
@@ -95,15 +101,29 @@ func getDtypeFD(d protoreflect.MessageDescriptor) protoreflect.FieldDescriptor {
 func processMsg(md protoreflect.MessageDescriptor, descriptor protoreflect.FieldDescriptor, value protoreflect.Value, resName, parentName protoreflect.Name) bool {
 	if md == nil {
 		opts := descriptor.Options().(*descriptorpb.FieldOptions)
-		dg, ok := proto.GetExtension(opts, policyPB.E_Dgraph).(string)
-		if ok && dg != "" {
-			fmt.Println("dgraph: ", dg)
-			pref.ValueOfString(dg)
-			value.List().Set(0, pref.ValueOfString(dg))
+		minRange, ok := proto.GetExtension(opts, policyPB.E_RangeMin).(int32)
+		if ok && minRange > 0 {
+			actMinRange := value.Int()
+			if actMinRange < int64(minRange) {
+				fmt.Println("minRange too small")
+				return false
+			} else {
+				fmt.Println("minRange ok")
+			}
 		}
-		fmt.Printf("resource: %v field: %v value: %v type: %v jsonName: %v parent: %v\n", resName, descriptor.Name(), value, descriptor.Kind().GoString(), descriptor.JSONName(), parentName)
+		maxRange, ok := proto.GetExtension(opts, policyPB.E_RangeMax).(int32)
+		if ok && maxRange > 0 {
+			actMaxRange := value.Int()
+			if actMaxRange < int64(maxRange) {
+				fmt.Println("maxRange too small")
+				return false
+			} else {
+				fmt.Println("maxRange ok")
+			}
+		}
+		//fmt.Printf("resource: %v field: %v value: %v type: %v jsonName: %v parent: %v\n", resName, descriptor.Name(), value, descriptor.Kind().GoString(), descriptor.JSONName(), parentName)
 	} else {
-		fmt.Printf("resource: %v field: %v type: %v jsonName: %v parent: %v\n", resName, descriptor.Name(), descriptor.Kind().GoString(), descriptor.JSONName(), parentName)
+		//fmt.Printf("resource: %v field: %v type: %v jsonName: %v parent: %v\n", resName, descriptor.Name(), descriptor.Kind().GoString(), descriptor.JSONName(), parentName)
 		resName = value.Message().Descriptor().Name()
 		rangeOverMsg(value, resName, parentName)
 	}

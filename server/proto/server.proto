@@ -1,11 +1,10 @@
 syntax = "proto3";
 
 import "policy.proto";
+import "gogo.proto";
 
 package server;
 option go_package = "github.com/michaelhenkel/sub/server/proto";
-
-
 
 service Server {
     rpc Create(ServerRequest) returns (ServerResult);
@@ -26,19 +25,22 @@ message ServerResult{
 message ServerResourceOne{
     string name = 1;
     string kind = 2;
-    repeated string dtype = 3 [(policy.dgraph) = "ServerResourceOne"];
+    repeated string dtype = 3 [(policy.dgraph) = "ServerResourceOne",(gogoproto.jsontag) = "dgraph.type",(gogoproto.moretags) = "dgraph:\"ServerResourceOne\""];
     ServerResourceTwo srTwo = 4;
 }
 
 message ServerResourceTwo{
     string name = 1;
     string kind = 2;
-    repeated string dtype = 3 [(policy.dgraph) = "ServerResourceTwo"];
+    repeated string dtype = 3 [(policy.dgraph) = "ServerResourceTwo",(gogoproto.jsontag) = "dgraph.type",(gogoproto.moretags) = "dgraph:\"ServerResourceTwo\""];
+    //repeated string dtype = 3 [(policy.dgraph) = "ServerResourceTwo"];    
     ResourceTwoSpec spec = 4;
 }
 
 message ResourceTwoSpec{
     string specName = 1;
     string specValue = 2;
-    repeated string dtype = 3 [(policy.dgraph) = "ResourceTwoSpec"];
+    repeated string dtype = 3 [(policy.dgraph) = "ResourceTwoSpec",(gogoproto.jsontag) = "dgraph.type",(gogoproto.moretags) = "dgraph:\"ResourceTwoSpec\""];
+    int32 startRange = 4 [(policy.rangeMin) = 10];
+    int32 endRange = 5 [(policy.rangeMax) = 20];
 }

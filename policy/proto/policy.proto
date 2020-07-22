@@ -6,4 +6,6 @@ option go_package = "github.com/michaelhenkel/sub/policy/proto";
 
 extend google.protobuf.FieldOptions {
     string dgraph = 50000;
+    int32 rangeMin = 50001;
+    int32 rangeMax = 50002;
 }
