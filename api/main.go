@@ -24,8 +24,6 @@ type api struct {
 	apiPB.UnimplementedApiServer
 }
 
-var GlobalTypes *protoregistry.Types = new(protoregistry.Types)
-
 //go:generate protoc -I../policy/proto --proto_path=proto --gogo_out=plugins=grpc:proto --gogo_opt=paths=source_relative proto/api.proto
 
 func newAPI() *api {
@@ -131,6 +129,7 @@ func processMsg(md protoreflect.MessageDescriptor, descriptor protoreflect.Field
 }
 
 func dynamicMsgFromRequest(apiMsg *apiPB.Request) (*dynamicpb.Message, error) {
+	fmt.Println(apiMsg.ProtoReflect().Descriptor().Parent().FullName())
 	fullName := protoreflect.FullName(apiMsg.GetApiGroup() + "." + apiMsg.GetKind())
 	d, err := protoregistry.GlobalFiles.FindDescriptorByName(fullName)
 	if err != nil {

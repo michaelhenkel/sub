@@ -9,3 +9,7 @@ extend google.protobuf.FieldOptions {
     int32 rangeMin = 50001;
     int32 rangeMax = 50002;
 }
+
+message Pol {
+    string poller = 1;
+}

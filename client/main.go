@@ -6,6 +6,7 @@ import (
 
 	"github.com/gogo/protobuf/proto"
 	apiPB "github.com/michaelhenkel/sub/api/proto"
+	policyPB "github.com/michaelhenkel/sub/policy/proto"
 	serverPB "github.com/michaelhenkel/sub/server/proto"
 	"google.golang.org/grpc"
 )
@@ -26,6 +27,9 @@ func main() {
 				SpecValue:  "r2specValue1",
 				StartRange: 9,
 				EndRange:   15,
+				Pol: &policyPB.Pol{
+					Poller: "blabla",
+				},
 			},
 		},
 	}
