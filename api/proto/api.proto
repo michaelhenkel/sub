@@ -12,9 +12,10 @@ service Api {
 }
 
 message Request{
-    string kind = 1;
-    string apiGroup = 2;
-    bytes msg = 3;
+    string name =1;
+    string kind = 2;
+    string apiGroup = 3;
+    bytes spec = 4;
 }
 
 message Result{

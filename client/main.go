@@ -19,16 +19,18 @@ func main() {
 	srOne := &serverPB.ServerResourceOne{
 		Kind: "ServerResourceOne",
 		Name: "name1",
-		SrTwo: &serverPB.ServerResourceTwo{
-			Kind: "ServerResourceTwo",
-			Name: "srName2",
-			Spec: &serverPB.ResourceTwoSpec{
-				SpecName:   "r2specName1",
-				SpecValue:  "r2specValue1",
-				StartRange: 9,
-				EndRange:   15,
-				Pol: &policyPB.Pol{
-					Poller: "blabla",
+		Spec: &serverPB.ServerResourceOneSpec{
+			SrTwo: &serverPB.ServerResourceTwo{
+				Kind: "ServerResourceTwo",
+				Name: "srName2",
+				Spec: &serverPB.ServerResourceTwoSpec{
+					SpecName:   "r2specName1",
+					SpecValue:  "r2specValue1",
+					StartRange: 9,
+					EndRange:   15,
+					Pol: &policyPB.Pol{
+						Poller: "blabla",
+					},
 				},
 			},
 		},
@@ -40,7 +42,7 @@ func main() {
 	apiRequest := &apiPB.Request{
 		Kind:     srOne.GetKind(),
 		ApiGroup: "server",
-		Msg:      data,
+		Spec:     data,
 	}
 
 	_, err = client.Create(context.Background(), apiRequest)

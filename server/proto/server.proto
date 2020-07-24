@@ -25,8 +25,14 @@ message ServerResult{
 message ServerResourceOne{
     string name = 1;
     string kind = 2;
-    repeated string dtype = 3 [(policy.dgraph) = "ServerResourceOne",(gogoproto.jsontag) = "dgraph.type",(gogoproto.moretags) = "dgraph:\"ServerResourceOne\""];
-    ServerResourceTwo srTwo = 4;
+    string apiGroup = 3;
+    repeated string dtype = 4 [(policy.dgraph) = "ServerResourceOne",(gogoproto.jsontag) = "dgraph.type",(gogoproto.moretags) = "dgraph:\"ServerResourceOne\""];
+    ServerResourceOneSpec spec = 5;
+}
+
+message ServerResourceOneSpec{
+    ServerResourceTwo srTwo = 1;
+    repeated string dtype = 2 [(policy.dgraph) = "ServerResourceOne",(gogoproto.jsontag) = "dgraph.type",(gogoproto.moretags) = "dgraph:\"ServerResourceOneSpec\""];
 }
 
 message ServerResourceTwo{
@@ -34,10 +40,10 @@ message ServerResourceTwo{
     string kind = 2;
     repeated string dtype = 3 [(policy.dgraph) = "ServerResourceTwo",(gogoproto.jsontag) = "dgraph.type",(gogoproto.moretags) = "dgraph:\"ServerResourceTwo\""];
     //repeated string dtype = 3 [(policy.dgraph) = "ServerResourceTwo"];    
-    ResourceTwoSpec spec = 4;
+    ServerResourceTwoSpec spec = 4;
 }
 
-message ResourceTwoSpec{
+message ServerResourceTwoSpec{
     string specName = 1;
     string specValue = 2;
     repeated string dtype = 3 [(policy.dgraph) = "ResourceTwoSpec",(gogoproto.jsontag) = "dgraph.type",(gogoproto.moretags) = "dgraph:\"ResourceTwoSpec\""];

@@ -62,6 +62,7 @@ func (a *api) Create(ctx context.Context, apiMsg *apiPB.Request) (*apiPB.Result,
 func rangeOverMsg(value protoreflect.Value, resName protoreflect.Name, parentName protoreflect.Name) {
 	resNameString := string(resName)
 	dtypeFD := getDtypeFD(value.Message().Descriptor())
+	//blabla
 	m := value.Message().New().Mutable(dtypeFD)
 	dtypeList := m.List()
 	dtypeList.Append(protoreflect.ValueOf(resNameString))
@@ -137,7 +138,7 @@ func dynamicMsgFromRequest(apiMsg *apiPB.Request) (*dynamicpb.Message, error) {
 	}
 	msgDesc := d.ParentFile().Messages()
 	md := msgDesc.ByName(protoreflect.Name(apiMsg.GetKind()))
-	msg, err := dynamicMsg(apiMsg.GetMsg(), md)
+	msg, err := dynamicMsg(apiMsg.GetSpec(), md)
 	if err != nil {
 		return &dynamicpb.Message{}, err
 	}
